@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base { body { @apply bg-white text-roop-dark font-inter antialiased; } h1,h2,h3,h4 { @apply font-playfair; } }
+@layer components {
+ .container-custom { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+ .btn-primary { @apply bg-roop-gold text-white px-6 py-3 rounded-full font-medium hover:bg-[#c19b2e] transition-all duration-300 shadow-luxury; }
+ .btn-outline { @apply border border-roop-gold text-roop-gold px-6 py-3 rounded-full hover:bg-roop-gold hover:text-white transition-all duration-300; }
+ .card-luxury { @apply bg-white rounded-[24px] shadow-card hover:shadow-luxury transition-all duration-500 border border-[#f7f0e6]; }
+ .badge-offer { @apply absolute top-3 left-3 bg-roop-rose text-white text-xs font-semibold px-3 py-1 rounded-full; }
+ .input-lux { @apply w-full px-4 py-3 rounded-xl border border-[#e9dcc7] bg-roop-cream/60 focus:outline-none focus:border-roop-gold focus:ring-2 focus:ring-roop-gold-light transition; }
+}
+.shimmer { background: linear-gradient(90deg, #f6f0e4 25%, #fff8ee 50%, #f6f0e4 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+@keyframes shimmer { 0% { background-position: -200% 0 } 100% { background-position: 200% 0 } }
