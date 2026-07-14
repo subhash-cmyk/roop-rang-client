@@ -2,14 +2,26 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 export const api = axios.create({ baseURL: API_URL, withCredentials: true });
 export const productAPI = {
-  list: (params?: any) => api.get('/products', { params }).then(r=>r.data),
-  get: (id:number) => api.get(`/products/${id}`).then(r=>r.data),
-  featured: () => api.get('/products/featured').then(r=>r.data),
-  newArrivals: () => api.get('/products/new').then(r=>r.data),
-  offers: () => api.get('/products/offers').then(r=>r.data),
-  byCategory: (slug:string) => api.get(`/products/category/${slug}`).then(r=>r.data),
+  list: (params?: any) => 
+    api.get('/products', { params }).then(r=>r.data),
+
+  get: (id:number) => 
+    api.get(`/products/${id}`).then(r=>r.data),
+
+  featured: () => 
+    api.get('/products/featured').then(r=>r.data),
+
+  newArrivals: () => 
+    api.get('/products/new-arrivals').then(r=>r.data),
+
+  offers: () => 
+    api.get('/products/offers').then(r=>r.data),
+
+  byCategory: (slug:string) => 
+    api.get(`/products/category/${slug}`).then(r=>r.data),
 };
 export const categoryAPI = { list: () => api.get('/categories').then(r=>r.data) };
+export const heroAPI = { get: () => api.get('/hero').then(r=>r.data), delete: () => api.delete("/hero"), };
 export const offerAPI = { list: () => api.get('/offers').then(r=>r.data) };
 export const inquiryAPI = { create: (payload:any) => api.post('/inquiry', payload).then(r=>r.data) };
 export const settingsAPI = { get: () => api.get('/settings').then(r=>r.data) };
