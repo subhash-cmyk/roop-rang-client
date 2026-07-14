@@ -7,7 +7,24 @@ import InquiryPage from './pages/InquiryPage'
 import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
 import NotFound from './pages/NotFound'
-function App() { return (
+import { useEffect } from 'react'
+
+function App() { 
+  useEffect(() => {
+
+    fetch("http://localhost:5000/api/visitor", {
+      method: "POST"
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Visitor tracked", data)
+      })
+      .catch(error => {
+        console.log("Visitor error", error)
+      })
+
+  }, [])  
+  return (
   <Routes>
     <Route element={<Layout />}>
       <Route path="/" element={<HomePage />} />
