@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
 import { productAPI, categoryAPI } from '../services/api'
 import ProductCard from '../components/product/ProductCard'
-import ProductModal from '../components/product/ProductModal'
 import { useSearchParams } from 'react-router-dom'
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
-  const [selected, setSelected] = useState<any | null>(null)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -132,7 +130,6 @@ export default function ProductsPage() {
           <ProductCard
             key={product.id}
             product={product}
-            onView={setSelected}
           />
         ))}
 
@@ -153,25 +150,16 @@ export default function ProductsPage() {
             <button
               key={index}
               onClick={() => setPage(index + 1)}
-              className={`w-11 h-11 rounded-full transition ${
-                page === index + 1
+              className={`w-11 h-11 rounded-full transition ${page === index + 1
                   ? 'bg-[#D8B08C] text-black'
                   : 'border border-[#D8B08C] text-[#B8865B] hover:bg-[#D8B08C] hover:text-black'
-              }`}
+                }`}
             >
               {index + 1}
             </button>
           ))}
 
         </div>
-      )}
-
-      {/* Modal */}
-      {selected && (
-        <ProductModal
-          product={selected}
-          onClose={() => setSelected(null)}
-        />
       )}
     </div>
   )

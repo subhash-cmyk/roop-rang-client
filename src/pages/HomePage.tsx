@@ -18,13 +18,32 @@ export default function HomePage() {
   const [hero, setHero] = useState<any>(null)
 
 
-  useEffect(() => {
-    heroAPI.get().then((data) => {setHero(data);}).catch((err) => {console.log("Hero API Error", err);})
-    productAPI.featured().then(r => setFeatured(r.data || []));
-    productAPI.newArrivals().then(r => setNewArrivals(r.data || []));
-    categoryAPI.list().then(r => setCategories(r.data || []));
-    offerAPI.list().then(r => setOffers(r.data || []));
-  }, [])
+useEffect(() => {
+  heroAPI
+    .get()
+    .then((data) => {
+      setHero(data);
+    })
+    .catch((err) => {
+      console.log("Hero API Error", err);
+    });
+
+  productAPI.featured().then((data) => {
+    setFeatured(data || []);
+  });
+
+  productAPI.newArrivals().then((data) => {
+    setNewArrivals(data || []);
+  });
+
+  categoryAPI.list().then((r) => {
+    setCategories(r.data || []);
+  });
+
+  offerAPI.list().then((r) => {
+    setOffers(r.data || []);
+  });
+}, []);
 
   useEffect(() => {
 

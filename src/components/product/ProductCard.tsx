@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Eye } from 'lucide-react'
 import { getImageUrl, whatsappBuy } from '../../services/api'
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   product: any
@@ -9,9 +10,9 @@ interface ProductCardProps {
 
 export default function ProductCard({
   product,
-  onView,
 }: ProductCardProps) {
   const img = product.images?.[0]?.url
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -20,7 +21,7 @@ export default function ProductCard({
       className="group w-full max-w-[300px] mx-auto bg-white rounded-2xl overflow-hidden border border-[#E9DCCB] shadow-sm hover:shadow-2xl transition-all duration-300"
     >
       {/* Image */}
-      <div className="relative h-[300px] overflow-hidden bg-[#F8F5F2]">
+      <div onClick={() => navigate(`/product/${product.id}`)}className="relative h-[300px] overflow-hidden bg-[#F8F5F2] cursor-pointer">
         {product.discount > 0 && (
           <span className="absolute top-4 left-4 z-10 bg-[#D8B08C] text-[#0B0B0B] text-xs font-semibold px-3 py-1 rounded-full shadow">
             {product.discount}% OFF
@@ -34,7 +35,7 @@ export default function ProductCard({
         />
 
         <button
-          onClick={() => onView?.(product)}
+          onClick={() => navigate(`/product/${product.id}`)}
           className="absolute bottom-4 right-4 flex items-center gap-2 bg-white text-[#0B0B0B] px-4 py-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
         >
           <Eye size={16} />
@@ -51,7 +52,7 @@ export default function ProductCard({
         </p>
 
         {/* Name */}
-        <h3 className="mt-2 font-playfair text-[20px] text-[#1A1A1A] leading-snug line-clamp-2 min-h-[56px]">
+        <h3 onClick={() => navigate(`/product/${product.id}`)} className="mt-2 font-playfair text-[20px] text-[#1A1A1A] leading-snug line-clamp-2 min-h-[56px] cursor-pointer hover:text-[#B8865B]">
           {product.name}
         </h3>
 
@@ -87,7 +88,7 @@ export default function ProductCard({
           </button>
 
           <button
-            onClick={() => onView?.(product)}
+            onClick={() => navigate(`/product/${product.id}`)}
             className="rounded-xl border border-[#D8B08C] px-5 py-3 text-sm font-semibold text-[#D8B08C] transition hover:bg-[#D8B08C] hover:text-black"
           >
             Details

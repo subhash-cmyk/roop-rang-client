@@ -5,21 +5,42 @@ export const productAPI = {
   list: (params?: any) => 
     api.get('/products', { params }).then(r=>r.data),
 
-  get: (id:number) => 
-    api.get(`/products/${id}`).then(r=>r.data),
+  get: (id:number) =>
+  api.get(`/products/${id}`).then(r => r.data.data),
 
-  featured: () => 
-    api.get('/products/featured').then(r=>r.data),
+  featured: () =>
+  api.get('/products/featured').then(r=>r.data.data),
 
-  newArrivals: () => 
-    api.get('/products/new-arrivals').then(r=>r.data),
+  newArrivals: () =>
+  api.get('/products/new-arrivals').then(r=>r.data.data),
 
-  offers: () => 
-    api.get('/products/offers').then(r=>r.data),
+  offers: () =>
+  api.get('/products/offers').then(r=>r.data.data),
 
-  byCategory: (slug:string) => 
-    api.get(`/products/category/${slug}`).then(r=>r.data),
+  byCategory: (slug:string) =>
+  api.get(`/products/category/${slug}`).then(r=>r.data.data),
 };
+
+export const userAuthAPI = {
+  register: (data: any) =>
+    api.post("/user/register", data).then((r) => r.data),
+
+  login: (data: any) =>
+    api.post("/user/login", data).then((r) => r.data),
+
+  logout: () =>
+    api.post("/user/logout").then((r) => r.data),
+
+  profile: () =>
+    api.get("/user/profile").then((r) => r.data),
+
+  updateProfile: (data: any) =>
+    api.put("/user/profile", data).then((r) => r.data),
+
+  changePassword: (data: any) =>
+    api.post("/user/change-password", data).then((r) => r.data),
+};
+
 export const categoryAPI = { list: () => api.get('/categories').then(r=>r.data) };
 export const heroAPI = { get: () => api.get('/hero').then(r=>r.data), delete: () => api.delete("/hero"), };
 export const offerAPI = { list: () => api.get('/offers').then(r=>r.data) };
