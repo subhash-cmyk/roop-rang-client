@@ -62,18 +62,18 @@ export default function RegisterPage() {
       const res = await userAuthAPI.register(form);
 
       if (res.success) {
-        toast.success("Account created successfully");
+        toast.success("Account created successfully. Please verify your email.");
 
-        localStorage.setItem("user_token", res.token);
-        localStorage.setItem("user", JSON.stringify(res.user));
-        window.dispatchEvent(new Event("authChanged"));
-
-        navigate("/profile");
+        navigate("/verify-email", {
+          state: {
+            email: res.email,
+          },
+        });
       }
     } catch (err: any) {
       toast.error(
         err.response?.data?.message ||
-        "Registration failed"
+        "Please enter a valid Indian mobile number"
       );
     } finally {
       setLoading(false);

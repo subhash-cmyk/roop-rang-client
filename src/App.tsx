@@ -13,6 +13,10 @@ import ScrollToTop from "./components/ScrollToTop";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import VerifyResetOTPPage from "./pages/VerifyResetOTPPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
   useEffect(() => {
@@ -45,6 +49,10 @@ function App() {
           <Route path="/register"element={<RegisterPage />}/>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/verify-email"element={<VerifyEmailPage />}/>
+          <Route path="/forgot-password"element={<ForgotPasswordPage />}/>
+          <Route path="/verify-reset-otp"element={<VerifyResetOTPPage />}/>
+          <Route path="/reset-password"element={<ResetPasswordPage />}/>
         </Route>
       </Routes>
     </>

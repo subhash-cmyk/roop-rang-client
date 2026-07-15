@@ -28,7 +28,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
 
-        const res = await userAuthAPI.login(form);
+      const res = await userAuthAPI.login(form);
 
       if (res.success) {
         toast.success("Logged in successfully");
@@ -39,11 +39,34 @@ export default function LoginPage() {
 
         navigate("/profile");
       }
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
+    } catch(error:any){
+
+ const message =
+ error.response?.data?.message;
+
+
+ if(
+   message === "Please verify your email first."
+ ){
+
+ toast.error(
+      "Please verify your email first. OTP has been sent to your email."
+    );
+   navigate("/verify-email",{
+     state:{
+       email: form.email
+     }
+   });
+
+   return;
+ }
+
+
+ toast.error(
+   message || "Login failed"
+ );
+
+}
   };
 
   return (
@@ -89,9 +112,13 @@ export default function LoginPage() {
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
-
           </div>
-
+          <Link
+            to="/forgot-password"
+            className="text-sm text-[#D8B08C]"
+          >
+            Forgot Password?
+          </Link>
           <button
             disabled={loading}
             className="w-full bg-[#B8865B] hover:bg-[#a87549] text-white rounded-xl py-3 font-semibold"
