@@ -20,7 +20,12 @@ export const productAPI = {
   byCategory: (slug: string) =>
     api.get(`/products/category/${slug}`).then(r => r.data.data),
 };
-
+export const aboutAPI = {
+  get: async () => {
+    const res = await api.get("/about");
+    return res.data;
+  },
+};
 export const userAuthAPI = {
   register: (data: any) =>
     api.post("/user/register", data).then((r) => r.data),

@@ -9,7 +9,6 @@ import InquiryPage from "./pages/InquiryPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import NotFound from "./pages/NotFound";
-import ScrollToTop from "./components/ScrollToTop";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -17,6 +16,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import VerifyResetOTPPage from "./pages/VerifyResetOTPPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import About from "./pages/AboutPage";
 
 function App() {
   useEffect(() => {
@@ -24,17 +24,11 @@ function App() {
       method: "POST",
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log("Visitor tracked", data);
-      })
-      .catch((error) => {
-        console.log("Visitor error", error);
-      });
+      .then((data) => console.log("Visitor tracked", data))
+      .catch((error) => console.log("Visitor error", error));
   }, []);
 
   return (
-    <>
-      <ScrollToTop />
 
       <Routes>
         <Route element={<Layout />}>
@@ -44,18 +38,18 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/inquiry" element={<InquiryPage />} />
           <Route path="/privacy-policy" element={<PrivacyPage />} />
+          <Route path="/about" element={<About />} />
           <Route path="/terms" element={<TermsPage />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="/register"element={<RegisterPage />}/>
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/verify-email"element={<VerifyEmailPage />}/>
-          <Route path="/forgot-password"element={<ForgotPasswordPage />}/>
-          <Route path="/verify-reset-otp"element={<VerifyResetOTPPage />}/>
-          <Route path="/reset-password"element={<ResetPasswordPage />}/>
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/verify-reset-otp" element={<VerifyResetOTPPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </>
   );
 }
 

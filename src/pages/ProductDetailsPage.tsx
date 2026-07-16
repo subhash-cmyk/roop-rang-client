@@ -30,34 +30,26 @@ useEffect(() => {
     loadProduct();
   }
 }, [id]);
+const loadProduct = async () => {
+  try {
+    setLoading(true);
 
-  useEffect(() => {
-    if (id) {
-      loadProduct();
-    }
-  }, [id]);
-
-  const loadProduct = async () => {
-    try {
-      setLoading(true);
-
-      const data = await productAPI.get(Number(id));
-
-      setProduct(data);
-    } catch (error) {
-      console.error("Product Load Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const data = await productAPI.get(Number(id));
+    setProduct(data);
+  } catch (error) {
+    setProduct(null);
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="loader"></div>
+    </div>
+  );
+}
 
   if (!product) {
     return (
@@ -66,6 +58,17 @@ useEffect(() => {
       </div>
     );
   }
+
+if (!product) {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <h2 className="text-2xl font-semibold">Product not found</h2>
+      <p className="mt-2 text-gray-500">
+        The product you're looking for doesn't exist.
+      </p>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-white py-12">
