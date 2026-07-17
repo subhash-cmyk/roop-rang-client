@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion'
-import { Eye } from 'lucide-react'
+import { MessageCircle } from 'lucide-react'
 import { getImageUrl, whatsappBuy } from '../../services/api'
 import { useNavigate } from "react-router-dom";
 
@@ -15,15 +14,16 @@ export default function ProductCard({
   const navigate = useNavigate();
 
   return (
-    <motion.div
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3 }}
-      className="group mx-auto w-full max-w-[310px] overflow-hidden rounded-[22px] border border-[#f0e5d8] bg-white shadow-sm transition-all duration-300 hover:border-roop-gold/40 hover:shadow-[0_22px_55px_rgba(45,27,30,0.10)]"
+    <div
+      className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-[#EFE7DA] bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C9A45B]/40 hover:shadow-[0_20px_45px_rgba(28,28,28,0.10)]"
     >
-      {/* Image */}
-      <div onClick={() => navigate(`/product/${product.id}`)} className="relative h-[280px] cursor-pointer overflow-hidden bg-[#fff8f1]">
+      {/* Image — Myntra-style portrait ratio, larger display area, no inner padding */}
+      <div
+        onClick={() => navigate(`/product/${product.id}`)}
+        className="relative aspect-[3/4] w-full cursor-pointer overflow-hidden bg-[#F3EDE6]"
+      >
         {product.discount > 0 && (
-          <span className="absolute left-4 top-4 z-10 rounded-full bg-roop-gold px-3 py-1 text-xs font-semibold text-white shadow">
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-[#C9A45B] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white shadow-md">
             {product.discount}% OFF
           </span>
         )}
@@ -31,83 +31,58 @@ export default function ProductCard({
         <img
           src={getImageUrl(img)}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
         />
-
-        <button
-          onClick={() => navigate(`/product/${product.id}`)}
-          className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[#0B0B0B] opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100"
-        >
-          <Eye size={16} />
-          <span className="text-xs font-medium">View</span>
-        </button>
       </div>
 
-      {/* Content */}
-      <div className="p-5">
+      {/* Content — Myntra-style: bold brand + 1-line title + price row */}
+      <div className="flex flex-1 flex-col p-3.5 sm:p-4">
 
-        {/* Category */}
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-roop-gold">
+        {/* Brand / Category — bold, dark (Myntra style) */}
+        <p className="truncate text-[13px] font-bold uppercase tracking-wide text-[#C9A45B]">
           {product.category?.name || product.brand || 'Roop Rang'}
         </p>
 
-        {/* Name */}
-        <h3 onClick={() => navigate(`/product/${product.id}`)} className="mt-2 line-clamp-2 min-h-[54px] cursor-pointer font-playfair text-[20px] leading-snug text-roop-dark transition hover:text-roop-gold">
+        {/* Name — single line with ellipsis */}
+        <h3
+          onClick={() => navigate(`/product/${product.id}`)}
+          className="mt-0.5 cursor-pointer truncate text-sm font-normal text-[#666666] transition-colors duration-300 hover:text-[#C9A45B]"
+        >
           {product.name}
         </h3>
 
-        {/* Description */}
-        <p className="mt-2 line-clamp-2 min-h-[42px] text-sm leading-6 text-gray-500">
-          {product.shortDesc ||
-            product.description?.slice(0, 80)}
-        </p>
-
-        {/* Price */}
-        <div className="mt-5 flex items-end gap-2">
-          <span className="text-2xl font-bold text-roop-dark">
-            ₹{product.sellingPrice}
+        {/* Price — bold selling price + struck MRP + (% OFF) in gold */}
+        <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5">
+          <span className="text-base font-bold text-[#1C1C1C]">
+            ₹{Number(product.sellingPrice).toLocaleString()}
           </span>
 
-          {product.mrp > product.sellingPrice && (
-            <span className="text-base text-gray-400 line-through">
-              ₹{product.mrp}
+          {Number(product.mrp) > Number(product.sellingPrice) && (
+            <span className="text-xs text-[#666666]/60 line-through">
+              ₹{Number(product.mrp).toLocaleString()}
+            </span>
+          )}
+
+          {Number(product.discount) > 0 && (
+            <span className="text-xs font-bold text-[#C9A45B]">
             </span>
           )}
         </div>
 
-        {/* Buttons */}
-        <div className="mt-5 flex gap-3">
-
+        {/* Buy on WhatsApp — the ONLY button (existing handler unchanged) */}
+        <div className="mt-auto pt-3.5">
           <button
             onClick={() =>
               whatsappBuy(product.name, product.sellingPrice)
             }
-            className="flex-1 rounded-full bg-roop-dark py-3 text-sm font-semibold text-white transition hover:bg-roop-gold"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:bg-[#1eb858] hover:shadow-[0_10px_24px_rgba(37,211,102,0.35)]"
           >
+            <MessageCircle size={14} />
             Buy on WhatsApp
           </button>
-
-          <button
-            onClick={() => navigate(`/product/${product.id}`)}
-            className="rounded-full border border-[#e4d2bf] px-5 py-3 text-sm font-semibold text-roop-dark transition hover:border-roop-gold hover:text-roop-gold"
-          >
-            Details
-          </button>
-
-        </div>
-
-        {/* Stock */}
-        <div className="mt-4 text-xs font-medium">
-          {product.stock > 10 ? (
-            <span className="text-emerald-600">● In Stock</span>
-          ) : product.stock > 0 ? (
-            <span className="text-orange-500">● Low Stock</span>
-          ) : (
-            <span className="text-red-500">● Out of Stock</span>
-          )}
         </div>
 
       </div>
-    </motion.div>
+    </div>
   )
 }

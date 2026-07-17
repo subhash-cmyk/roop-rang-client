@@ -1,238 +1,124 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  ArrowLeft,
-  Phone,
-  MessageCircle,
-  ShieldCheck,
-  Store,
+  ArrowLeft, Check, ChevronDown, ChevronUp, MessageCircle,
+  Phone, RotateCcw, ShieldCheck, Store,
 } from "lucide-react";
 
-import {
-  productAPI,
-  getImageUrl,
-  whatsappBuy,
-} from "../services/api";
-
-export default function ProductDetailsPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-  window.scrollTo(0, 0);
-}, []);
-
-useEffect(() => {
-  if (id) {
-    loadProduct();
-  }
-}, [id]);
-const loadProduct = async () => {
-  try {
-    setLoading(true);
-
-    const data = await productAPI.get(Number(id));
-    setProduct(data);
-  } catch (error) {
-    setProduct(null);
-  } finally {
-    setLoading(false);
-  }
+const product = {
+  name: "Saffron Glow Face Serum",
+  category: "Face Care",
+  sellingPrice: 899,
+  mrp: 1199,
+  discount: 25,
+  sku: "RR-SGS-30",
+  stock: 18,
+  description: "A lightweight, radiance-boosting serum infused with saffron and botanical extracts. It absorbs quickly to help even the appearance of skin tone and leave your complexion soft, smooth, and naturally luminous.",
+  ingredients: "Saffron extract, niacinamide, hyaluronic acid, rose water, aloe vera, and vitamin E.",
+  howToUse: "Apply 2-3 drops to clean, slightly damp skin. Gently press into the face and neck, then follow with moisturiser. Use morning and evening.",
+  images: [
+    { url: "https://images.pexels.com/photos/20382236/pexels-photo-20382236.jpeg?auto=compress&cs=tinysrgb&w=1200", alt: "Saffron glow serum and toner" },
+    { url: "https://images.pexels.com/photos/31251024/pexels-photo-31251024.jpeg?auto=compress&cs=tinysrgb&w=1200", alt: "Serum bottles in warm botanical tones" },
+    { url: "https://images.pexels.com/photos/16125025/pexels-photo-16125025.jpeg?auto=compress&cs=tinysrgb&w=1200", alt: "Luxury product detail" },
+  ],
 };
 
-  if (loading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="loader"></div>
-    </div>
-  );
-}
+const accordionItems = [
+  { key: "description", title: "Description", value: product.description },
+  { key: "ingredients", title: "Ingredients", value: product.ingredients },
+  { key: "howToUse", title: "How to use", value: product.howToUse },
+];
 
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Product not found
-      </div>
-    );
-  }
+export default function App() {
+  const [openSection, setOpenSection] = useState<string | null>("description");
+  const [activeImage, setActiveImage] = useState(0);
 
-if (!product) {
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h2 className="text-2xl font-semibold">Product not found</h2>
-      <p className="mt-2 text-gray-500">
-        The product you're looking for doesn't exist.
-      </p>
-    </div>
-  );
-}
+  const whatsappBuy = () => {
+    const text = encodeURIComponent(`Hi, I would like to buy ${product.name} for Rs. ${product.sellingPrice}.`);
+    window.open(`https://wa.me/917096241594?text=${text}`, "_blank", "noopener,noreferrer");
+  };
 
   return (
-    <div className="min-h-screen bg-white py-12">
-      <div className="container mx-auto px-4">
-
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 mb-8 text-gray-700 hover:text-[#B8865B]"
-        >
-          <ArrowLeft size={20} />
-          Back
+    <main className="min-h-screen bg-[#fbfaf7] text-[#24211e]">
+      <div className="mx-auto max-w-[1440px] px-5 pb-20 pt-7 sm:px-8 lg:px-12 lg:pb-28 lg:pt-10">
+        <button onClick={() => window.history.back()} className="group mb-7 inline-flex items-center gap-2.5 text-sm font-medium text-[#67615b] transition-colors hover:text-[#9a613a] lg:mb-10">
+          <span className="grid h-9 w-9 place-items-center rounded-full border border-[#ded8cf] bg-white transition-transform group-hover:-translate-x-1">
+            <ArrowLeft size={17} strokeWidth={1.8} />
+          </span>
+          Back to collection
         </button>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(430px,0.92fr)] lg:gap-16 xl:gap-24">
+          <section className="lg:sticky lg:top-8" aria-label="Product gallery">
+            <div className="gallery-layout">
+              <div className="order-2 flex gap-3 overflow-x-auto pb-1 lg:order-1 lg:flex-col lg:overflow-visible">
+                {product.images.map((image, index) => (
+                  <button key={image.url} onClick={() => setActiveImage(index)} aria-label={`View product image ${index + 1}`} aria-pressed={activeImage === index} className={`relative h-[74px] w-[74px] shrink-0 overflow-hidden rounded-sm bg-[#eee9e2] transition-all duration-300 lg:h-[92px] lg:w-[76px] ${activeImage === index ? "ring-1 ring-[#49392e] ring-offset-3 ring-offset-[#fbfaf7]" : "opacity-60 hover:opacity-100"}`}>
+                    <img src={image.url} alt="" className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
 
-          {/* Left Side */}
-          <div className="relative bg-[#F8F5F2] rounded-3xl overflow-hidden">
+              <div className="relative order-1 aspect-[4/4.55] min-h-[430px] overflow-hidden bg-[#eee9e2] lg:order-2 lg:min-h-[620px]">
+                <div className="absolute left-5 top-5 z-10 bg-[#29241f] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">{product.discount}% off</div>
+                <AnimatePresence mode="wait">
+                  <motion.img key={activeImage} src={product.images[activeImage].url} alt={product.images[activeImage].alt} initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-0 h-full w-full object-cover" />
+                </AnimatePresence>
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/10 to-transparent" />
+                <div className="absolute bottom-5 right-5 text-[11px] font-medium tracking-[0.12em] text-white drop-shadow-md">0{activeImage + 1} / 0{product.images.length}</div>
+              </div>
+            </div>
+          </section>
 
-            {product.discount > 0 && (
-              <span className="absolute top-6 left-6 bg-[#D8B08C] text-black text-xs font-semibold px-4 py-2 rounded-full shadow z-10">
-                {product.discount}% OFF
-              </span>
-            )}
+          <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.08 }} className="lg:pt-5">
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#a56b43]">Roop Rang / {product.category}</p>
+            <h1 className="font-display max-w-xl text-[46px] font-medium leading-[0.98] tracking-[-0.03em] text-[#28231f] sm:text-6xl lg:text-[64px]">{product.name}</h1>
 
-            <img
-              src={getImageUrl(product.images?.[0]?.url)}
-              alt={product.name}
-              className="w-full object-cover rounded-3xl"
-            />
-          </div>
-
-          {/* Right Side */}
-          <div>
-
-            {/* Category */}
-            <p className="uppercase tracking-[3px] text-[#B8865B] text-xs font-semibold">
-              {product.category?.name || "Roop Rang"}
-            </p>
-
-            {/* Product Name */}
-            <h1 className="text-4xl font-bold mt-3 text-[#111]">
-              {product.name}
-            </h1>
-
-            {/* Price */}
-            <div className="flex flex-wrap items-center gap-4 mt-6">
-
-              <span className="text-4xl font-bold">
-                ₹{product.sellingPrice}
-              </span>
-
-              {product.mrp > product.sellingPrice && (
-                <span className="text-xl text-gray-400 line-through">
-                  ₹{product.mrp}
-                </span>
-              )}
-
-              {product.discount > 0 && (
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
-                  Save {product.discount}%
-                </span>
-              )}
-
+            <div className="mt-7 flex items-baseline gap-3 border-b border-[#ded8cf] pb-8">
+              <span className="text-3xl font-semibold tracking-tight">₹{product.sellingPrice}</span>
+              {product.mrp > product.sellingPrice && <span className="text-base text-[#999087] line-through">₹{product.mrp}</span>}
+              <span className="ml-1 text-xs text-[#7c756f]">Inclusive of all taxes</span>
             </div>
 
-            {/* Description */}
-            <p className="mt-6 text-gray-600 leading-8">
-              {product.description}
-            </p>
-
-            {/* Product Info */}
-            <div className="grid grid-cols-2 gap-4 mt-8">
-
-              <div className="rounded-2xl border border-[#EFE5D8] p-4">
-                <p className="text-xs uppercase tracking-wider text-gray-500">
-                  SKU
-                </p>
-
-                <p className="mt-2 font-semibold text-[#222]">
-                  {product.sku || "-"}
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-[#EFE5D8] p-4">
-                <p className="text-xs uppercase tracking-wider text-gray-500">
-                  Stock
-                </p>
-
-                <p
-                  className={`mt-2 font-semibold ${
-                    product.stock > 10
-                      ? "text-green-600"
-                      : product.stock > 0
-                      ? "text-orange-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {product.stock > 0
-                    ? `${product.stock} Available`
-                    : "Out of Stock"}
-                </p>
-              </div>
-
+            <div className="divide-y divide-[#ded8cf]">
+              {accordionItems.map((item) => (
+                <div key={item.key}>
+                  <button onClick={() => setOpenSection(openSection === item.key ? null : item.key)} className="flex w-full items-center justify-between py-5 text-left" aria-expanded={openSection === item.key}>
+                    <span className="text-[15px] font-semibold">{item.title}</span>
+                    {openSection === item.key ? <ChevronUp size={18} strokeWidth={1.6} /> : <ChevronDown size={18} strokeWidth={1.6} />}
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {openSection === item.key && (
+                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
+                        <p className="max-w-xl pb-6 text-[14px] leading-7 text-[#6f6861]">{item.value}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
             </div>
 
-            {/* Buttons */}
-            <div className="grid sm:grid-cols-2 gap-4 mt-8">
-
-              <button
-                onClick={() =>
-                  whatsappBuy(
-                    product.name,
-                    product.sellingPrice
-                  )
-                }
-                className="flex items-center justify-center gap-2 bg-[#0B0B0B] hover:bg-[#D8B08C] hover:text-black text-white rounded-xl py-4 font-semibold transition"
-              >
-                <MessageCircle size={18} />
-                Buy on WhatsApp
-              </button>
-
-              <a
-                href="tel:+917096241594"
-                className="flex items-center justify-center gap-2 border-2 border-[#D8B08C] text-[#B8865B] hover:bg-[#D8B08C] hover:text-black rounded-xl py-4 font-semibold transition"
-              >
-                <Phone size={18} />
-                Call Store
-              </a>
-
+            <div className="mt-5 grid grid-cols-2 border-y border-[#ded8cf] py-5 text-sm">
+              <div><p className="mb-1 text-[10px] uppercase tracking-[0.16em] text-[#938a82]">SKU</p><p className="font-medium">{product.sku || "-"}</p></div>
+              <div className="border-l border-[#ded8cf] pl-6">
+                <p className="mb-1 text-[10px] uppercase tracking-[0.16em] text-[#938a82]">Availability</p>
+                <p className="flex items-center gap-1.5 font-medium text-[#527052]"><Check size={13} strokeWidth={2.5} />{product.stock > 0 ? `In stock (${product.stock})` : "Out of stock"}</p>
+              </div>
             </div>
 
-            {/* Features */}
-            <div className="mt-10 border-t border-[#EFE5D8] pt-6 space-y-4">
-
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <ShieldCheck
-                  size={18}
-                  className="text-[#B8865B]"
-                />
-                100% Authentic Products
-              </div>
-
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <Store
-                  size={18}
-                  className="text-[#B8865B]"
-                />
-                Surat Store Pickup Available
-              </div>
-
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <ShieldCheck
-                  size={18}
-                  className="text-[#B8865B]"
-                />
-                Easy Returns & Premium Support
-              </div>
-
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              <button onClick={whatsappBuy} className="flex min-h-14 items-center justify-center gap-2.5 bg-[#29241f] px-5 text-sm font-semibold text-white transition-all hover:bg-[#a56b43]"><MessageCircle size={18} strokeWidth={1.8} />Buy on WhatsApp</button>
+              <a href="tel:+917096241594" className="flex min-h-14 items-center justify-center gap-2.5 border border-[#a56b43] px-5 text-sm font-semibold text-[#6f452b] transition-colors hover:bg-[#f1e7dd]"><Phone size={17} strokeWidth={1.8} />Call store</a>
             </div>
 
-          </div>
+            <div className="mt-9 grid gap-4 text-[13px] text-[#6f6861] sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              <div className="flex items-center gap-2.5"><ShieldCheck size={18} strokeWidth={1.5} className="text-[#a56b43]" />100% authentic</div>
+              <div className="flex items-center gap-2.5"><Store size={18} strokeWidth={1.5} className="text-[#a56b43]" />Surat pickup</div>
+              <div className="flex items-center gap-2.5"><RotateCcw size={18} strokeWidth={1.5} className="text-[#a56b43]" />Easy returns</div>
+            </div>
+          </motion.section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

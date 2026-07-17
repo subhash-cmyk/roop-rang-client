@@ -17,6 +17,8 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import VerifyResetOTPPage from "./pages/VerifyResetOTPPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import About from "./pages/AboutPage";
+import ScrollToTop from "./components/ScrollToTop";
+
 
 function App() {
   useEffect(() => {
@@ -29,6 +31,8 @@ function App() {
   }, []);
 
   return (
+    <>
+      <ScrollToTop />
 
       <Routes>
         <Route element={<Layout />}>
@@ -38,7 +42,6 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/inquiry" element={<InquiryPage />} />
           <Route path="/privacy-policy" element={<PrivacyPage />} />
-          <Route path="/about" element={<About />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -50,7 +53,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+    </>
   );
 }
-
 export default App;
