@@ -16,14 +16,14 @@ export default function ProductCard({
 
   return (
     <motion.div
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -6 }}
       transition={{ duration: 0.3 }}
-      className="group w-full max-w-[300px] mx-auto bg-white rounded-2xl overflow-hidden border border-[#E9DCCB] shadow-sm hover:shadow-2xl transition-all duration-300"
+      className="group mx-auto w-full max-w-[310px] overflow-hidden rounded-[22px] border border-[#f0e5d8] bg-white shadow-sm transition-all duration-300 hover:border-roop-gold/40 hover:shadow-[0_22px_55px_rgba(45,27,30,0.10)]"
     >
       {/* Image */}
-      <div onClick={() => navigate(`/product/${product.id}`)}className="relative h-[300px] overflow-hidden bg-[#F8F5F2] cursor-pointer">
+      <div onClick={() => navigate(`/product/${product.id}`)} className="relative h-[280px] cursor-pointer overflow-hidden bg-[#fff8f1]">
         {product.discount > 0 && (
-          <span className="absolute top-4 left-4 z-10 bg-[#D8B08C] text-[#0B0B0B] text-xs font-semibold px-3 py-1 rounded-full shadow">
+          <span className="absolute left-4 top-4 z-10 rounded-full bg-roop-gold px-3 py-1 text-xs font-semibold text-white shadow">
             {product.discount}% OFF
           </span>
         )}
@@ -36,7 +36,7 @@ export default function ProductCard({
 
         <button
           onClick={() => navigate(`/product/${product.id}`)}
-          className="absolute bottom-4 right-4 flex items-center gap-2 bg-white text-[#0B0B0B] px-4 py-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
+          className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[#0B0B0B] opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100"
         >
           <Eye size={16} />
           <span className="text-xs font-medium">View</span>
@@ -47,24 +47,24 @@ export default function ProductCard({
       <div className="p-5">
 
         {/* Category */}
-        <p className="text-[11px] uppercase tracking-[2px] text-[#B8865B] font-semibold">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-roop-gold">
           {product.category?.name || product.brand || 'Roop Rang'}
         </p>
 
         {/* Name */}
-        <h3 onClick={() => navigate(`/product/${product.id}`)} className="mt-2 font-playfair text-[20px] text-[#1A1A1A] leading-snug line-clamp-2 min-h-[56px] cursor-pointer hover:text-[#B8865B]">
+        <h3 onClick={() => navigate(`/product/${product.id}`)} className="mt-2 line-clamp-2 min-h-[54px] cursor-pointer font-playfair text-[20px] leading-snug text-roop-dark transition hover:text-roop-gold">
           {product.name}
         </h3>
 
         {/* Description */}
-        <p className="mt-2 text-sm text-gray-500 line-clamp-2 min-h-[42px]">
+        <p className="mt-2 line-clamp-2 min-h-[42px] text-sm leading-6 text-gray-500">
           {product.shortDesc ||
             product.description?.slice(0, 80)}
         </p>
 
         {/* Price */}
-        <div className="flex items-end gap-2 mt-5">
-          <span className="text-2xl font-bold text-[#0B0B0B]">
+        <div className="mt-5 flex items-end gap-2">
+          <span className="text-2xl font-bold text-roop-dark">
             ₹{product.sellingPrice}
           </span>
 
@@ -76,20 +76,20 @@ export default function ProductCard({
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-3 mt-5">
+        <div className="mt-5 flex gap-3">
 
           <button
             onClick={() =>
               whatsappBuy(product.name, product.sellingPrice)
             }
-            className="flex-1 rounded-xl bg-[#0B0B0B] py-3 text-sm font-semibold text-white transition hover:bg-[#D8B08C] hover:text-black"
+            className="flex-1 rounded-full bg-roop-dark py-3 text-sm font-semibold text-white transition hover:bg-roop-gold"
           >
             Buy on WhatsApp
           </button>
 
           <button
             onClick={() => navigate(`/product/${product.id}`)}
-            className="rounded-xl border border-[#D8B08C] px-5 py-3 text-sm font-semibold text-[#D8B08C] transition hover:bg-[#D8B08C] hover:text-black"
+            className="rounded-full border border-[#e4d2bf] px-5 py-3 text-sm font-semibold text-roop-dark transition hover:border-roop-gold hover:text-roop-gold"
           >
             Details
           </button>
