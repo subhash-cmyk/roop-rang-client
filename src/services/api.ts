@@ -8,6 +8,9 @@ export const productAPI = {
   get: (id: number) =>
     api.get(`/products/${id}`).then(r => r.data.data),
 
+  getBySlug: (slug: string) =>
+    api.get(`/products/slug/${slug}`).then(r => r.data.data),
+
   featured: () =>
     api.get('/products/featured').then(r => r.data.data),
 
@@ -20,11 +23,10 @@ export const productAPI = {
   byCategory: (slug: string) =>
     api.get(`/products/category/${slug}`).then(r => r.data.data),
 };
+
 export const aboutAPI = {
-  get: async () => {
-    const res = await api.get("/about");
-    return res.data;
-  },
+  get: () => api.get("/about"),
+  update: (data: FormData | object) => api.put("/about", data),
 };
 export const userAuthAPI = {
   register: (data: any) =>
