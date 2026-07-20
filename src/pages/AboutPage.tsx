@@ -22,14 +22,17 @@ export default function AboutPage() {
   }, []);
 
 
-  const fetchAbout = async () => {
-    try {
-      const res = await aboutAPI.get();
-      setAbout(res.data || {});
-    } catch (error) {
-      console.log(error);
+const fetchAbout = async () => {
+  try {
+    const res = await aboutAPI.get();
+
+    if (res.data.success) {
+      setAbout(res.data.data);
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
   return (

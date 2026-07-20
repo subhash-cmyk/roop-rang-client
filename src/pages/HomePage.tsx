@@ -77,6 +77,7 @@ export default function HomePage() {
   const [heroLoading, setHeroLoading] = useState(true)
 
   useEffect(() => {
+    console.log("HomePage mounted");
 
     heroAPI
 

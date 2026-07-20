@@ -16,29 +16,29 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import VerifyResetOTPPage from "./pages/VerifyResetOTPPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import About from "./pages/AboutPage";
 import ScrollToTop from "./components/ScrollToTop";
 
 
 function App() {
-  useEffect(() => {
-    fetch("/api/visitor", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+useEffect(() => {
+  // Prevent duplicate calls in React Strict Mode (development)
+  if (sessionStorage.getItem("visitorTracked")) return;
+
+  sessionStorage.setItem("visitorTracked", "true");
+
+  console.log("Visitor API Called");
+
+  fetch("/api/visitor", {
+    method: "POST",
+  })
+    .then(async (res) => {
+      console.log("Status:", res.status);
+      console.log("Response:", await res.text());
     })
-
-      .then(async (res) => {
-        console.log("Status:", res.status);
-
-        const text = await res.text();
-        console.log("Response:", text);
-      })
-      .catch((error) => {
-        console.error("Visitor error:", error);
-      });
-      }, []);
+    .catch((error) => {
+      console.error("Visitor error:", error);
+    });
+}, []);
 
     return (
       <>
