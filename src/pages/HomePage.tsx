@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import {
-  ChevronLeft,
-  ChevronRight,
   Sparkles,
   ShieldCheck,
   Truck,
@@ -15,8 +13,9 @@ import {
 import { productAPI, categoryAPI, getImageUrl, offerAPI, heroAPI } from '../services/api'
 import ProductCard from '../components/product/ProductCard'
 import ProductModal from '../components/product/ProductModal'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import OffersSection from "../components/offers/OffersSection";
 
 /* Small gold eyebrow label with hairline rules */
 function Eyebrow({ children, center = false, light = false }: { children: React.ReactNode; center?: boolean; light?: boolean }) {
@@ -38,16 +37,21 @@ export default function HomePage() {
   const [offers, setOffers] = useState<any[]>([])
   const [selected, setSelected] = useState<any | null>(null)
   const [activeOffer, setActiveOffer] = useState(0)
+
   const [showAllCategories, setShowAllCategories] = useState(false)
   const [showAllFeatured, setShowAllFeatured] = useState(false)
   const [showAllNewArrivals, setShowAllNewArrivals] = useState(false)
+  const [showAllOfferProducts, setShowAllOfferProducts] = useState(false)
+
   const [hero, setHero] = useState<any>(null)
   const [heroLoading, setHeroLoading] = useState(true)
-  const [offerProducts, setOfferProducts] = useState<any[]>([]);
-  const [showAllOfferProducts, setShowAllOfferProducts] = useState(false);
+
+  const [offerProducts, setOfferProducts] = useState<any[]>([])
+
   const offerProductsToShow = showAllOfferProducts
-  ? offerProducts
-  : offerProducts.slice(0, 8);
+    ? offerProducts
+    : offerProducts.slice(0, 8)
+  
 
   useEffect(() => {
     console.log("HomePage mounted");
@@ -352,107 +356,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════════════════════ OFFERS — full width ══════════════════════ */}
+        {/* ══════════════════════ OFFERS — Immersive Full-Width ══════════════════════ */}
       {offers.length > 0 && currentOffer && (
-        <section className="w-full py-20 lg:py-28">
-          <div className="px-5 sm:px-8 lg:px-12 xl:px-16">
-            <div className="relative overflow-hidden rounded-[32px] border border-[#1C1C1C]/[0.05] bg-white text-[#1C1C1C] shadow-[0_30px_80px_rgba(28,28,28,0.10)]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentOffer.id}
-                  initial={{ opacity: 0, x: 80 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -80 }}
-                  transition={{ duration: 0.5 }}
-                  className="grid md:grid-cols-2"
-                >
-                  {/* Content */}
-                  <div className="flex flex-col justify-center p-8 sm:p-12 lg:p-16 xl:p-20">
-                    <Eyebrow>Limited Offer</Eyebrow>
-                    <h3 className="mt-4 font-playfair text-3xl leading-[1.15] text-[#1C1C1C] sm:text-4xl lg:text-5xl">
-                      {currentOffer.name}
-                    </h3>
-                    <p className="mt-5 max-w-md text-sm leading-7 text-[#666666] sm:text-base sm:leading-8">
-                      {currentOffer.description}
-                    </p>
-                    <div className="mt-9 flex flex-wrap gap-3">
-                      <Link
-                        to="/products"
-                        className="rounded-full bg-[#1C1C1C] px-8 py-3.5 text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-all duration-300 hover:bg-[#C9A45B]"
-                      >
-                        Shop Now
-                      </Link>
-                      <a
-                        href="https://wa.me/917096241594"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-full border border-[#25D366]/40 px-8 py-3.5 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#1eb858] transition-all duration-300 hover:bg-[#25D366] hover:text-white"
-                      >
-                        WhatsApp Order
-                      </a>
-                    </div>
-                    {currentOffer.endDate && (
-                      <div className="mt-7 text-[11px] font-medium uppercase tracking-[0.2em] text-[#666666]/70">
-                        Valid till {new Date(currentOffer.endDate).toLocaleDateString('en-IN')}
-                      </div>
-                    )}
-                  </div>
-                  {/* Image */}
-                  <div className="relative h-[320px] overflow-hidden md:h-auto md:min-h-[520px]">
-                    {currentOffer.bannerImage && (
-                      <img
-                        src={getImageUrl(currentOffer.bannerImage)}
-                        alt={currentOffer.name || 'offer'}
-                        className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent md:bg-gradient-to-r md:from-white/30 md:via-transparent md:to-transparent" />
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-              {/* Left Arrow */}
-              {offers.length > 1 && (
-                <button
-                  aria-label="Previous offer"
-                  onClick={() =>
-                    setActiveOffer(activeOffer === 0 ? offers.length - 1 : activeOffer - 1)
-                  }
-                  className="absolute left-5 top-1/2 -translate-y-1/2 rounded-full border border-[#1C1C1C]/10 bg-white/90 p-3 text-[#1C1C1C] shadow-lg transition-all duration-300 hover:border-[#C9A45B] hover:bg-[#C9A45B] hover:text-white"
-                >
-                  <ChevronLeft size={22} />
-                </button>
-              )}
-              {/* Right Arrow */}
-              {offers.length > 1 && (
-                <button
-                  aria-label="Next offer"
-                  onClick={() =>
-                    setActiveOffer(activeOffer === offers.length - 1 ? 0 : activeOffer + 1)
-                  }
-                  className="absolute right-5 top-1/2 -translate-y-1/2 rounded-full border border-[#1C1C1C]/10 bg-white/90 p-3 text-[#1C1C1C] shadow-lg transition-all duration-300 hover:border-[#C9A45B] hover:bg-[#C9A45B] hover:text-white"
-                >
-                  <ChevronRight size={22} />
-                </button>
-              )}
-            </div>
-            {/* Dots */}
-            {offers.length > 1 && (
-              <div className="mt-8 flex justify-center gap-2">
-                {offers.map((_, index) => (
-                  <button
-                    key={index}
-                    aria-label={`Go to offer ${index + 1}`}
-                    onClick={() => setActiveOffer(index)}
-                    className={`h-2 rounded-full transition-all duration-300 ${activeOffer === index
-                      ? 'w-10 bg-[#C9A45B]'
-                      : 'w-2 bg-[#1C1C1C]/15 hover:bg-[#C9A45B]/50'
-                      }`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+        <OffersSection
+          offers={offers}
+          activeOffer={activeOffer}
+          currentOffer={currentOffer}
+          setActiveOffer={setActiveOffer}
+        />
       )}
 
       {/* ══════════════════════ NEW ARRIVALS — full width ══════════════════════ */}
@@ -532,7 +443,7 @@ export default function HomePage() {
                   onClick={() => setShowAllOfferProducts(!showAllOfferProducts)}
                   className="group inline-flex items-center gap-2 rounded-full border border-[#1C1C1C]/15 bg-white px-7 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1C1C1C] transition-all duration-300 hover:border-[#C9A45B] hover:bg-[#C9A45B] hover:text-white"
                 >
-                 {showAllOfferProducts ? 'Show Less' : 'View All Offer Products'}
+                  {showAllOfferProducts ? 'Show Less' : 'View All Offer Products'}
                   <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:rotate-45" />
                 </button>
               )}

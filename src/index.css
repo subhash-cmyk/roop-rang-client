@@ -563,5 +563,6 @@ button { cursor: pointer; }
   }
 }
 
+
 ::-webkit-scrollbar { height: 5px; width: 5px; }
 ::-webkit-scrollbar-thumb { border-radius: 999px; background: #c9c0b7; }
