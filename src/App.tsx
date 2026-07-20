@@ -17,53 +17,55 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import VerifyResetOTPPage from "./pages/VerifyResetOTPPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ScrollToTop from "./components/ScrollToTop";
+import { useLoader } from "./context/LoaderContext";
+
 
 
 function App() {
-useEffect(() => {
-  // Prevent duplicate calls in React Strict Mode (development)
-  if (sessionStorage.getItem("visitorTracked")) return;
+  const { loading } = useLoader();
 
-  sessionStorage.setItem("visitorTracked", "true");
+  useEffect(() => {
+    // Prevent duplicate calls in React Strict Mode (development)
+    if (sessionStorage.getItem("visitorTracked")) return;
 
-  console.log("Visitor API Called");
+    sessionStorage.setItem("visitorTracked", "true");
 
-  fetch("/api/visitor", {
-    method: "POST",
-  })
-    .then(async (res) => {
-      console.log("Status:", res.status);
-      console.log("Response:", await res.text());
-    })
-    .catch((error) => {
-      console.error("Visitor error:", error);
-    });
-}, []);
+    fetch("/api/visitor", {
+      method: "POST",
+    }).catch(console.error);
+  }, []);
 
-    return (
-      <>
-        <ScrollToTop />
+  return (
+    <>
+      {loading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/70 backdrop-blur-sm">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#d6c7b7] border-t-[#8b5e3c]" />
+        </div>
+      )}
 
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/product/:id" element={<ProductDetailsPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/inquiry" element={<InquiryPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/verify-reset-otp" element={<VerifyResetOTPPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </>
-    );
-  }
+      <ScrollToTop />
+
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/product/:id" element={<ProductDetailsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/inquiry" element={<InquiryPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/verify-reset-otp" element={<VerifyResetOTPPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </>
+  );
+}
+
 export default App;

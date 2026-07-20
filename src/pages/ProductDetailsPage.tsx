@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useLoader } from "../context/LoaderContext";
 import { useParams } from "react-router-dom";
 import { productAPI, getImageUrl } from "../services/api";
 import {
@@ -14,48 +15,39 @@ import {
   Store,
 } from "lucide-react";
 
-export default function App() {
+
+export default function ProductDetailsPage() {
   const [product, setProduct] = useState<any>(null);
   const { id } = useParams();
   const [activeImage, setActiveImage] = useState(0);
   const [openSection, setOpenSection] =
-    useState<string | null>("description");
+  useState<string | null>("description");
+  const { showLoader, hideLoader } = useLoader();
 
   useEffect(() => {
     fetchProduct();
   }, []);
+  const fetchProduct = async () => {
+    try {
+      showLoader();
 
-  const [loading, setLoading] = useState(true);
+      const res = await productAPI.get(Number(id));
+      setProduct(res);
+    } catch (error) {
+      console.error(error);
+      setProduct(null);
+    } finally {
+      hideLoader();
+    }
+  };
 
-const fetchProduct = async () => {
-  try {
-    setLoading(true);
-
-    const res = await productAPI.get(Number(id));
-    setProduct(res);
-  } catch (error) {
-    console.error(error);
-    setProduct(null);
-  } finally {
-    setLoading(false);
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Product not found
+      </div>
+    );
   }
-};
-
-  if (loading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      Loading...
-    </div>
-  );
-}
-
-if (!product) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      Product not found
-    </div>
-  );
-}
 
   const accordionItems = [
     {
@@ -114,8 +106,8 @@ if (!product) {
                     aria-label={`View product image ${index + 1}`}
                     aria-pressed={activeImage === index}
                     className={`relative h-[74px] w-[74px] shrink-0 overflow-hidden rounded-sm bg-[#eee9e2] transition-all duration-300 lg:h-[92px] lg:w-[76px] ${activeImage === index
-                        ? "ring-1 ring-[#49392e] ring-offset-3 ring-offset-[#fbfaf7]"
-                        : "opacity-60 hover:opacity-100"
+                      ? "ring-1 ring-[#49392e] ring-offset-3 ring-offset-[#fbfaf7]"
+                      : "opacity-60 hover:opacity-100"
                       }`}
                   >
                     <img
