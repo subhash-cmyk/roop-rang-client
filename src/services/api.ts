@@ -97,6 +97,7 @@ resetPassword: async (data:any) => {
 };
 
 export const categoryAPI = { list: () => api.get('/categories').then(r => r.data) };
+export const testimonialAPI = { list: () => api.get('/testimonials').then(r => r.data) };
 export const heroAPI = { get: () => api.get('/hero').then(r => r.data), delete: () => api.delete("/hero"), };
 export const offerAPI = { list: () => api.get('/offers').then(r => r.data) };
 export const inquiryAPI = { create: (payload: any) => api.post('/inquiry', payload).then(r => r.data) };

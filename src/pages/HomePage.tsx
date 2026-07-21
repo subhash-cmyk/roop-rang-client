@@ -10,12 +10,13 @@ import {
   ArrowUpRight,
 } from 'lucide-react'
 
-import { productAPI, categoryAPI, getImageUrl, offerAPI, heroAPI } from '../services/api'
+import { productAPI, categoryAPI, getImageUrl, offerAPI, heroAPI, testimonialAPI } from '../services/api'
 import ProductCard from '../components/product/ProductCard'
 import ProductModal from '../components/product/ProductModal'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import OffersSection from "../components/offers/OffersSection";
+import { useLoader } from '../context/LoaderContext'
 
 /* Small gold eyebrow label with hairline rules */
 function Eyebrow({ children, center = false, light = false }: { children: React.ReactNode; center?: boolean; light?: boolean }) {
@@ -31,6 +32,7 @@ function Eyebrow({ children, center = false, light = false }: { children: React.
 }
 
 export default function HomePage() {
+  const { showLoader, hideLoader } = useLoader()
   const [featured, setFeatured] = useState<any[]>([])
   const [newArrivals, setNewArrivals] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
@@ -47,13 +49,15 @@ export default function HomePage() {
   const [heroLoading, setHeroLoading] = useState(true)
 
   const [offerProducts, setOfferProducts] = useState<any[]>([])
+  const [testimonials, setTestimonials] = useState<any[]>([])
 
   const offerProductsToShow = showAllOfferProducts
     ? offerProducts
     : offerProducts.slice(0, 8)
-  
+
 
   useEffect(() => {
+    showLoader();
     console.log("HomePage mounted");
     heroAPI
       .get()
@@ -85,6 +89,12 @@ export default function HomePage() {
     offerAPI.list().then((r) => {
       const list = Array.isArray(r) ? r : r?.data
       setOffers(list || [])
+    })
+    testimonialAPI.list().then((r) => {
+      const list = Array.isArray(r) ? r : r?.data
+      setTestimonials(list || [])
+    }).finally(() => {
+      hideLoader();
     })
   }, [])
 
@@ -356,7 +366,7 @@ export default function HomePage() {
         </div>
       </section>
 
-        {/* ══════════════════════ OFFERS — Immersive Full-Width ══════════════════════ */}
+      {/* ══════════════════════ OFFERS — Immersive Full-Width ══════════════════════ */}
       {offers.length > 0 && currentOffer && (
         <OffersSection
           offers={offers}
@@ -417,7 +427,7 @@ export default function HomePage() {
 
 
       {/* ══════════════════════ OFFER PRODUCT — full width ══════════════════════ */}
-      <section className="w-full py-20 lg:py-28">
+      <section className="w-full py-8 lg:py-5">
         <div className="px-5 sm:px-8 lg:px-12 xl:px-16">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -523,40 +533,38 @@ export default function HomePage() {
               Loved by <span className="italic text-[#C9A45B]">2000+ Beauties</span>
             </h2>
           </motion.div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { n: 'Priya S.', c: 'Surat', t: 'Lipstick pigment is insane! Roop Rang is my go-to now.' },
-              { n: 'Anjali M.', c: 'Dindoli', t: 'Foundation shade matched perfectly. Love the luxury packaging.' },
-              { n: 'Kavya R.', c: 'Ahmedabad', t: 'Super fast WhatsApp order. Authentic products, great price.' },
-            ].map((t, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="relative rounded-[24px] border border-[#1C1C1C]/[0.05] bg-white p-9 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(28,28,28,0.10)]"
-              >
-                <span className="pointer-events-none absolute right-7 top-5 font-playfair text-7xl leading-none text-[#C9A45B]/15">
-                  &rdquo;
-                </span>
-                <div className="mb-5 flex text-[#C9A45B]">
-                  {[...Array(5)].map((_, s) => (
-                    <Star key={s} size={15} fill="currentColor" />
-                  ))}
-                </div>
-                <p className="font-playfair text-lg leading-8 text-[#1C1C1C]/80 italic">"{t.t}"</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3EDE6] font-playfair text-sm font-semibold text-[#C9A45B] ring-1 ring-[#C9A45B]/25">
-                    {t.n.charAt(0)}
+          <div className="overflow-hidden">
+            <div className="flex gap-6 animate-testimonial-scroll">
+              {[...testimonials, ...testimonials].map((t: any, i: number) => (
+                <motion.div
+                  key={`${t.id}-${i}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="relative w-[360px] flex-shrink-0 rounded-[24px] border border-[#1C1C1C]/[0.05] bg-white p-9 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(28,28,28,0.10)]"
+                >
+                  <span className="pointer-events-none absolute right-7 top-5 font-playfair text-7xl leading-none text-[#C9A45B]/15">
+                    &rdquo;
                   </span>
-                  <div className="text-sm font-semibold text-[#1C1C1C]">
-                    {t.n}
-                    <span className="block text-xs font-medium text-[#666666]/70">{t.c}</span>
+
+                  <div className="mb-5 flex text-[#C9A45B]">
+                    {[...Array(5)].map((_, s) => (
+                      <Star
+                        key={s}
+                        size={15}
+                        fill={s < t.rating ? "currentColor" : "none"}
+                        className={s < t.rating ? "" : "text-[#C9A45B]/30"}
+                      />
+                    ))}
                   </div>
-                </div>
-              </motion.div>
-            ))}
+
+                  <p className="font-playfair text-lg leading-8 text-[#1C1C1C]/80 italic">
+                    "{t.review}"
+                  </p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

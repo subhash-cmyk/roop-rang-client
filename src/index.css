@@ -563,6 +563,24 @@ button { cursor: pointer; }
   }
 }
 
+@keyframes testimonial-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-testimonial-scroll {
+  display: flex;
+  width: max-content;
+  animation: testimonial-scroll 30s linear infinite;
+}
+
+.animate-testimonial-scroll:hover {
+  animation-play-state: paused;
+}
 
 ::-webkit-scrollbar { height: 5px; width: 5px; }
 ::-webkit-scrollbar-thumb { border-radius: 999px; background: #c9c0b7; }
