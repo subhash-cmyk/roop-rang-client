@@ -17,6 +17,7 @@ export default function ProductsPage() {
   const [category, setCategory] = useState(
     searchParams.get('category') || ''
   )
+  const offer = searchParams.get('offer') || searchParams.get('offerId') || ''
   const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -27,6 +28,7 @@ export default function ProductsPage() {
       .list({
         search,
         category,
+        offer,
         sort,
         page,
         limit: 12,
@@ -40,7 +42,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     load()
-  }, [search, category, sort, page])
+  }, [search, category, offer, sort, page])
 
   useEffect(() => {
     categoryAPI.list().then((r) => {
@@ -102,110 +104,116 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="container-custom py-8 md:py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-6 md:py-8">
         
-        {/* Filter Bar */}
-        <div className="sticky top-20 z-40 mb-8">
-          <div className="bg-white/80 backdrop-blur-xl border border-[#E8DCC8] rounded-2xl shadow-lg p-4 md:p-6">
-            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
-              
-              {/* Search */}
-              <div className="relative flex-1 w-full lg:w-auto">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search products..."
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#E5D8C4] bg-[#FDFBF7] focus:border-[#D8B08C] focus:ring-2 focus:ring-[#D8B08C]/20 outline-none transition-all duration-300 text-sm"
-                />
+        {/* Filter Bar - Modern Toolbar */}
+        <div className="sticky top-0 z-40 mb-6">
+          <div className="bg-white/95 backdrop-blur-xl border border-[#E8DCC8] rounded-xl shadow-md">
+            <div className="p-4">
+              <div className="flex flex-col xl:flex-row gap-3 items-stretch xl:items-center">
+                
+                {/* Search */}
+                <div className="relative flex-1 w-full xl:w-auto min-w-[200px]">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search products..."
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#E5D8C4] bg-[#FDFBF7] focus:border-[#D8B08C] focus:ring-2 focus:ring-[#D8B08C]/20 outline-none transition-all duration-200 text-sm placeholder:text-gray-400"
+                  />
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 flex-1">
+                  {/* Category */}
+                  <div className="relative flex-1 sm:flex-none sm:w-44">
+                    <select
+                      value={category}
+                      onChange={(e) => {
+                        setCategory(e.target.value)
+                        setSearchParams(
+                          e.target.value
+                            ? { category: e.target.value }
+                            : {}
+                        )
+                      }}
+                      className="w-full appearance-none px-3 py-2.5 pr-9 rounded-lg border border-[#E5D8C4] bg-[#FDFBF7] focus:border-[#D8B08C] focus:ring-2 focus:ring-[#D8B08C]/20 outline-none transition-all duration-200 text-sm cursor-pointer"
+                    >
+                      <option value="">All Categories</option>
+                      {categories.map((c: any) => (
+                        <option key={c.id} value={c.slug}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+                  </div>
+
+                  {/* Sort */}
+                  <div className="relative flex-1 sm:flex-none sm:w-44">
+                    <select
+                      value={sort}
+                      onChange={(e) => setSort(e.target.value)}
+                      className="w-full appearance-none px-3 py-2.5 pr-9 rounded-lg border border-[#E5D8C4] bg-[#FDFBF7] focus:border-[#D8B08C] focus:ring-2 focus:ring-[#D8B08C]/20 outline-none transition-all duration-200 text-sm cursor-pointer"
+                    >
+                      <option value="newest">Newest First</option>
+                      <option value="price_asc">Price: Low to High</option>
+                      <option value="price_desc">Price: High to Low</option>
+                      <option value="popular">Most Popular</option>
+                      <option value="name">Name: A-Z</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+                  </div>
+
+                  {/* Clear Filters */}
+                  {activeFiltersCount > 0 && (
+                    <button
+                      onClick={clearFilters}
+                      className="px-4 py-2.5 rounded-lg border border-[#E5D8C4] text-gray-600 hover:border-[#D8B08C] hover:text-[#D8B08C] hover:bg-[#D8B08C]/5 transition-all duration-200 text-sm font-medium whitespace-nowrap"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {/* Category */}
-              <div className="relative w-full lg:w-48">
-                <select
-                  value={category}
-                  onChange={(e) => {
-                    setCategory(e.target.value)
-                    setSearchParams(
-                      e.target.value
-                        ? { category: e.target.value }
-                        : {}
-                    )
-                  }}
-                  className="w-full appearance-none px-4 py-3 pr-10 rounded-xl border border-[#E5D8C4] bg-[#FDFBF7] focus:border-[#D8B08C] focus:ring-2 focus:ring-[#D8B08C]/20 outline-none transition-all duration-300 text-sm cursor-pointer"
-                >
-                  <option value="">All Categories</option>
-                  {categories.map((c: any) => (
-                    <option key={c.id} value={c.slug}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              {/* Sort */}
-              <div className="relative w-full lg:w-48">
-                <select
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                  className="w-full appearance-none px-4 py-3 pr-10 rounded-xl border border-[#E5D8C4] bg-[#FDFBF7] focus:border-[#D8B08C] focus:ring-2 focus:ring-[#D8B08C]/20 outline-none transition-all duration-300 text-sm cursor-pointer"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="price_asc">Price: Low to High</option>
-                  <option value="price_desc">Price: High to Low</option>
-                  <option value="popular">Most Popular</option>
-                  <option value="name">Name: A-Z</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              {/* Clear Filters */}
+              {/* Active Filters Display */}
               {activeFiltersCount > 0 && (
-                <button
-                  onClick={clearFilters}
-                  className="px-4 py-3 rounded-xl border border-[#E5D8C4] text-gray-600 hover:border-[#D8B08C] hover:text-[#D8B08C] transition-all duration-300 text-sm font-medium whitespace-nowrap"
-                >
-                  Clear Filters
-                </button>
+                <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-[#E8DCC8]/60">
+                  {search && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D8B08C]/10 text-[#D8B08C] text-xs font-medium">
+                      <Search className="w-3 h-3" />
+                      "{search}"
+                    </span>
+                  )}
+                  {category && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D8B08C]/10 text-[#D8B08C] text-xs font-medium">
+                      <Filter className="w-3 h-3" />
+                      {categories.find((c: any) => c.slug === category)?.name || category}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
-
-            {/* Active Filters Display */}
-            {activeFiltersCount > 0 && (
-              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-[#E8DCC8]">
-                {search && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#D8B08C]/10 text-[#D8B08C] text-xs font-medium">
-                    Search: "{search}"
-                  </span>
-                )}
-                {category && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#D8B08C]/10 text-[#D8B08C] text-xs font-medium">
-                    {categories.find((c: any) => c.slug === category)?.name || category}
-                  </span>
-                )}
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Products Grid */}
+        {/* Products Grid - 6 columns on large screens */}
         {loading ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-[#EFE7DA] overflow-hidden">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl border border-[#EFE7DA] overflow-hidden">
                 <div className="aspect-[3/4] bg-[#F3EDE6] shimmer" />
-                <div className="p-4 space-y-3">
-                  <div className="h-4 bg-[#F3EDE6] rounded shimmer" />
-                  <div className="h-3 bg-[#F3EDE6] rounded shimmer w-3/4" />
-                  <div className="h-5 bg-[#F3EDE6] rounded shimmer w-1/2" />
+                <div className="p-3 space-y-2">
+                  <div className="h-3 bg-[#F3EDE6] rounded shimmer" />
+                  <div className="h-2.5 bg-[#F3EDE6] rounded shimmer w-3/4" />
+                  <div className="h-4 bg-[#F3EDE6] rounded shimmer w-1/2" />
                 </div>
               </div>
             ))}
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
               {products.map((product, index) => (
                 <div 
                   key={product.id} 

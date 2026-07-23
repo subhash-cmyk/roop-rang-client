@@ -17,8 +17,8 @@ export const productAPI = {
   newArrivals: () =>
     api.get('/products/new-arrivals').then(r => r.data.data),
 
-  offers: () =>
-    api.get('/products/offers').then(r => r.data.data),
+  offers: (offerId?: number | string) =>
+    api.get('/products/offers', { params: offerId ? { offerId } : undefined }).then(r => r.data.data),
 
   byCategory: (slug: string) =>
     api.get(`/products/category/${slug}`).then(r => r.data.data),

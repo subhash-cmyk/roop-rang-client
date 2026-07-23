@@ -214,7 +214,7 @@ export default function OffersSection({
               {/* CTA Buttons */}
               <div className="mt-9 flex flex-wrap gap-3 sm:mt-10">
                 <Link
-                  to="/products"
+                  to={currentOffer?.id ? `/products?offer=${currentOffer.id}` : '/products'}
                   className="group inline-flex items-center gap-3 rounded-full bg-[#C9A45B] px-8 py-3.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-white hover:text-[#1C1C1C] sm:px-9 sm:py-4 sm:text-[12px]"
                 >
                   Shop This Offer
